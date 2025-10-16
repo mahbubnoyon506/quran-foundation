@@ -1,4 +1,4 @@
-This is a [Quran Foundation dummy]([https://nextjs.org](https://quran-foundation.vercel.app) project
+This is a [Quran Foundation dummy](https://quran-foundation.vercel.app) project
 
 ## Getting Started
 

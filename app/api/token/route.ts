@@ -1,4 +1,8 @@
-import { CLIENT_ID, CLIENT_SECRET } from "@/app/components/constant";
+import {
+  AUTH_ENDPOINT,
+  CLIENT_ID,
+  CLIENT_SECRET,
+} from "@/app/components/constant";
 import { setToken, getToken } from "@/app/utils/globalTokenStore";
 import axios, { AxiosError } from "axios";
 
@@ -14,7 +18,7 @@ export async function POST(): Promise<Response> {
   try {
     // Request new token
     const res = await axios.post(
-      "https://prelive-oauth2.quran.foundation/oauth2/token",
+      `${AUTH_ENDPOINT}`,
       "grant_type=client_credentials&scope=content",
       {
         headers: {

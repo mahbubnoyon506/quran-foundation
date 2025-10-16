@@ -1,4 +1,8 @@
-import { CLIENT_ID, CLIENT_SECRET } from "@/app/components/constant";
+import {
+  CHAPTERS_ENDPOINT,
+  CLIENT_ID,
+  CLIENT_SECRET,
+} from "@/app/components/constant";
 import { getToken, setToken } from "@/app/utils/globalTokenStore";
 import axios, { AxiosError } from "axios";
 
@@ -28,10 +32,9 @@ export async function GET(): Promise<Response> {
   }
 
   try {
-    const response = await axios.get(
-      "https://apis-prelive.quran.foundation/content/api/v4/chapters",
-      { headers: { "x-auth-token": accessToken!, "x-client-id": CLIENT_ID } }
-    );
+    const response = await axios.get(`${CHAPTERS_ENDPOINT}`, {
+      headers: { "x-auth-token": accessToken!, "x-client-id": CLIENT_ID },
+    });
 
     return Response.json(response.data);
   } catch (error) {

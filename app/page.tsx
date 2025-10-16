@@ -42,22 +42,6 @@ export default function Home() {
     fetchChapters();
   }, []);
 
-  useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const res = await fetch("/api/token", { method: "POST" });
-        const data = await res.json();
-        setToken(data.access_token);
-      } catch (err) {
-        console.error("Error fetching token:", err);
-      }
-    };
-
-    fetchToken();
-  }, []);
-  console.log("Token..🚀", token);
-  console.log("Chapter..🚀", chapters);
-
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h1 className="text-4xl font-bold text-center mb-10 text-gray-800">

@@ -22,7 +22,6 @@ interface Chapter {
 }
 
 export default function Home() {
-  const [token, setToken] = useState<string | null>(null);
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [loading, setLoading] = useState(true);
 

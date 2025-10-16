@@ -1,6 +1,63 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+
+interface TranslatedName {
+  language_name: string;
+  name: string;
+}
+
+interface Chapter {
+  id: number;
+  revelation_place: string;
+  revelation_order: number;
+  bismillah_pre: boolean;
+  name_simple: string;
+  name_complex: string;
+  name_arabic: string;
+  verses_count: number;
+  pages: number[];
+  translated_name: TranslatedName;
+}
 
 export default function Home() {
+  const [token, setToken] = useState<string | null>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      try {
+        const res = await fetch("/api/chapters");
+        const data = await res.json();
+        setChapters(data.chapters || []);
+      } catch (err) {
+        console.error("Error fetching chapters:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChapters();
+  }, []);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const res = await fetch("/api/token", { method: "POST" });
+        const data = await res.json();
+        setToken(data.access_token);
+      } catch (err) {
+        console.error("Error fetching token:", err);
+      }
+    };
+
+    fetchToken();
+  }, []);
+  console.log("Token..🚀", token);
+  console.log("Chapter..🚀", chapters);
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">

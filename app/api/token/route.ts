@@ -1,0 +1,47 @@
+// @ts-nocheck
+
+import { setToken, getToken } from "@/app/utils/globalTokenStore";
+import axios from "axios";
+
+export async function POST(): Promise<Response> {
+  //Check cached token
+  const cached = getToken();
+  if (cached) {
+    return Response.json({ access_token: cached, cached: true });
+  }
+
+  const clientId = process.env.CLIENT_ID;
+  const clientSecret = process.env.CLIENT_SECRET;
+
+  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  try {
+    // Request new token
+    const res = await axios.post(
+      "https://prelive-oauth2.quran.foundation/oauth2/token",
+      "grant_type=client_credentials&scope=content",
+      {
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    const { access_token, expires_in } = res.data;
+
+    // Cache it globally
+    setToken(access_token, expires_in);
+
+    return Response.json({ access_token, cached: false });
+  } catch (err: unknown) {
+    console.error("Token fetch error:", err.response?.data || err.message);
+    return new Response(
+      JSON.stringify({
+        error: "Failed to fetch token",
+        details: err.response?.data || err.message,
+      }),
+      { status: 500 }
+    );
+  }
+}

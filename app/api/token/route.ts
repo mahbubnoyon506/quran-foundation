@@ -1,7 +1,6 @@
-// @ts-nocheck
-
+import { CLIENT_ID, CLIENT_SECRET } from "@/app/components/constant";
 import { setToken, getToken } from "@/app/utils/globalTokenStore";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 export async function POST(): Promise<Response> {
   //Check cached token
@@ -10,10 +9,7 @@ export async function POST(): Promise<Response> {
     return Response.json({ access_token: cached, cached: true });
   }
 
-  const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
-
-  const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+  const auth = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64");
 
   try {
     // Request new token
@@ -34,7 +30,8 @@ export async function POST(): Promise<Response> {
     setToken(access_token, expires_in);
 
     return Response.json({ access_token, cached: false });
-  } catch (err: unknown) {
+  } catch (error) {
+    const err = error as AxiosError;
     console.error("Token fetch error:", err.response?.data || err.message);
     return new Response(
       JSON.stringify({
